@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import info.androidhive.sqlite.R;
-import info.androidhive.sqlite.database.model.Note;
 import info.androidhive.sqlite.utils.MyDividerItemDecoration;
 import info.androidhive.sqlite.utils.RecyclerTouchListener;
 
@@ -55,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showNoteDialog(false, null, -1);
+                showStudentDialog(false, null, -1);
             }
         });
 
@@ -91,11 +90,11 @@ public class MainActivity extends AppCompatActivity {
      * and refreshing the list
      */
     private void createStudent(String name, int grade, String course) {
-        // inserting note in db and getting
-        // newly inserted note id
+        // inserting student in db and getting
+        // newly inserted student id
         long id = db.insertStudent(name, grade, course);
 
-        // get the newly inserted note from db
+        // get the newly inserted student from db
         Student n = db.getStudent(id);
 
         if (n != null) {
@@ -110,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Updating note in db and updating
+     * Updating student in db and updating
      * item in the list by its position
      */
     private void updateStudent(String name, int grade, String course, int position) {
@@ -131,14 +130,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Deleting note from SQLite and removing the
+     * Deleting student from SQLite and removing the
      * item from the list by its position
      */
     private void deleteStudent(int position) {
-        // deleting the note from db
+        // deleting the student from db
         db.deleteStudent(studentsList.get(position));
 
-        // removing the note from the list
+        // removing the student
+        // from the list
         studentsList.remove(position);
         mAdapter.notifyItemRemoved(position);
 
@@ -159,7 +159,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 if (which == 0) {
-                    showNoteDialog(true, studentsList.get(position), position);
+                    showStudentDialog(true, studentsList.get(position), position);
                 } else {
                     deleteStudent(position);
                 }
@@ -171,11 +171,11 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Shows alert dialog with EditText options to enter / edit
-     * a note.
-     * when shouldUpdate=true, it automatically displays old note and changes the
+     * a stuudent.
+     * when shouldUpdate=true, it automatically displays old student and changes the
      * button text to UPDATE
      */
-    private void showNoteDialog(final boolean shouldUpdate, final Student student, final int position) {
+    private void showStudentDialog(final boolean shouldUpdate, final Student student, final int position) {
         LayoutInflater layoutInflaterAndroid = LayoutInflater.from(getApplicationContext());
         View view = layoutInflaterAndroid.inflate(R.layout.student_dialog, null);
 
@@ -192,7 +192,7 @@ public class MainActivity extends AppCompatActivity {
         if (shouldUpdate && student != null) {
             studentName.setText(student.getName());
             studentCourse.setText(student.getCourse());
-            studentGrade.setText(student.getGrade());
+            studentGrade.setText(Integer.toString(student.getGrade()));
         }
         alertDialogBuilderUserInput
                 .setCancelable(false)
@@ -226,12 +226,12 @@ public class MainActivity extends AppCompatActivity {
                     alertDialog.dismiss();
                 }
 
-                // check if user updating note
+                // check if user updating student
                 if (shouldUpdate && student != null) {
-                    // update note by it's id
+                    // update student by it's id
                     updateStudent(studentName.getText().toString(),Integer.parseInt(studentGrade.getText().toString()), studentCourse.getText().toString(), position);
                 } else {
-                    // create new note
+                    // create new student
                     createStudent(studentName.getText().toString(),Integer.parseInt(studentGrade.getText().toString()), studentCourse.getText().toString());
                 }
             }
