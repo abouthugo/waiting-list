@@ -17,7 +17,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import info.androidhive.sqlite.database.StudentDbHelper;
+import info.androidhive.sqlite.database.DatabaseHelper;
 import info.androidhive.sqlite.database.model.Student;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,12 +33,12 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private TextView noStudentsView;
 
-    private StudentDbHelper db;
+    private DatabaseHelper db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.student_activity_main);
+        setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.student_toolbar);
         setSupportActionBar(toolbar);
 
@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.student_recycler_view);
         noStudentsView = findViewById(R.id.empty_students_view);
 
-        db = new StudentDbHelper(this);
+        db = new DatabaseHelper(this);
 
         studentsList.addAll(db.getAllStudents());
 
@@ -177,7 +177,7 @@ public class MainActivity extends AppCompatActivity {
      */
     private void showStudentDialog(final boolean shouldUpdate, final Student student, final int position) {
         LayoutInflater layoutInflaterAndroid = LayoutInflater.from(getApplicationContext());
-        View view = layoutInflaterAndroid.inflate(R.layout.student_dialog, null);
+        View view = layoutInflaterAndroid.inflate(R.layout.dialog, null);
 
         AlertDialog.Builder alertDialogBuilderUserInput = new AlertDialog.Builder(MainActivity.this);
         alertDialogBuilderUserInput.setView(view);
@@ -187,7 +187,7 @@ public class MainActivity extends AppCompatActivity {
         final EditText studentCourse = view.findViewById(R.id.course);
 
         TextView dialogTitle = view.findViewById(R.id.student_dialog_title);
-        dialogTitle.setText(!shouldUpdate ? getString(R.string.student_lbl_new_note_title) : getString(R.string.student_lbl_edit_note_title));
+        dialogTitle.setText(!shouldUpdate ? getString(R.string.lbl_new_student_title) : getString(R.string.lbl_edit_student_title));
 
         if (shouldUpdate && student != null) {
             studentName.setText(student.getName());
